@@ -5,6 +5,7 @@ const {Organizations} = require('../models')
 /* GET organizations listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
+  
 });
 
 router.get('/1/public', async function(req, res) {
