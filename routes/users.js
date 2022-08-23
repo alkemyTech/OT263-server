@@ -1,5 +1,5 @@
 var express = require('express');
-const crearUsuario = require('../controllers/user.auth.controller');
+const createUser = require('../controllers/user.auth.controller');
 
 
 var usersRouter = express.Router();
@@ -9,6 +9,6 @@ usersRouter.get('/', function (req, res, next) {
   res.send('respond with a resource');
 });
 
-usersRouter.post('/auth/register', crearUsuario)
+usersRouter.post('/auth/register', createUser)
 
 module.exports = usersRouter;
