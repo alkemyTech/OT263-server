@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const jwt = require("jsonwebtoken");
+const { requireAuth } = require("../middlewares/requireAuth");
 
 const UserController = require("../controllers/user.controller");
 
@@ -12,14 +12,11 @@ router.get("/", function (req, res, next) {
 
 router.get(
     "/auth/me",
-    jwt.verify(req.headers.authorization, process.env.JWT_SECRET), 
+    requireAuth,
     async function (req, res, next) {
         try {
             const userId = req.user.sub;
             const user = await  controller.getUserById(userId);
-            if (!user) {
-                res.status(404).send("User not found");
-            }
             res.send(user);
         } catch (err) {
             next(err); 
