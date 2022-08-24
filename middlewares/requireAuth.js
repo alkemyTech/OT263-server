@@ -1,6 +1,5 @@
-const jwt = require('jsonwebtoken')
+const { decodeToken } = require('../services/token')
 const createError = require('http-errors')
-require('dotenv').config()
 
 const requireAuth = async (req, res, next) => {
 	const { authorization } = req.headers
@@ -10,7 +9,7 @@ const requireAuth = async (req, res, next) => {
 	const token = authorization.split(' ').pop()
 
 	try {
-		const decoded = jwt.verify(token, process.env.PASSWORD)
+		const decoded = decodeToken(token)
 		req.user = decoded
 		next()
 	} catch (error) {
