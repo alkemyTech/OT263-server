@@ -7,6 +7,7 @@ const UserController = require('../controllers/user.controller')
 
 const controller = new UserController()
 
+router.use(express.json())
 router.use(requireAuth)
 
 /* GET users listing. */

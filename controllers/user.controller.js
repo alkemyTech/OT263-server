@@ -14,18 +14,15 @@ class UserController {
 
 	async deleteUser(req, res) {
 		const { sub: id } = req.user
-
 		try {
-			if (id !== req.params.id) throw Error
-			else {
-				const row = await User.destroy({ where: { id } })
+			if (id != req.params.id) return res.status(403).json(createError.Forbidden())
 
-				if (!row) return res.status(404).json(createError.NotFound())
+			const row = await User.destroy({ where: { id } })
+			if (!row) return res.status(404).json(createError.NotFound())
 
-				return res.status(204)
-			}
+			return res.status(204).send()
 		} catch (error) {
-			return res.status(403).json(createError.Forbidden())
+			return res.status(500).json(createError.InternalServerError())
 		}
 	}
 }
