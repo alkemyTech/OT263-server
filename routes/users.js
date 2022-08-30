@@ -5,6 +5,7 @@ const { loginUser, createUser } = require('../controllers/user.auth.controller')
 const { requireAuth } = require("../middlewares/requireAuth");
 
 const UserController = require("../controllers/user.controller");
+const { requireAdmin } = require("../middlewares/requireAdmin");
 
 const controller = new UserController();
 
@@ -34,6 +35,6 @@ router.get(
 
 router.post('/auth/register', createUser)
 
-router.get('/users', controller.getUsers)
+router.get('/users', requireAdmin ,controller.getUsers)
 
 module.exports = router;
