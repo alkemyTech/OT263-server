@@ -12,6 +12,14 @@ class UserController {
         }
         return user;
     }
+
+    async getUsers(req, res){
+        try{
+            return res.status(200).json(await User.findAll())
+        }catch(err){
+            return res.send(err)
+        }
+    }
 }
 
 module.exports = UserController;
