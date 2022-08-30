@@ -6,4 +6,6 @@ const requireAdmin = async (req, res, next) => {
 	next()
 }
 
+commitotro = 2;
+
 module.exports = { requireAdmin }
