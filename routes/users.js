@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
 const { body } = require('express-validator');
-const loginUser = require('../controllers/user.auth.controller');
+const { loginUser, createUser } = require('../controllers/user.auth.controller');
 const { requireAuth } = require("../middlewares/requireAuth");
+
 const UserController = require("../controllers/user.controller");
 
 const controller = new UserController();
@@ -30,6 +31,8 @@ router.get(
     }
   }
 );
+
+router.post('/auth/register', createUser)
 
 router.get('/users', controller.getUsers)
 
