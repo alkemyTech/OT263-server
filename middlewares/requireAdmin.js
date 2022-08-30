@@ -9,5 +9,3 @@ const requireAdmin = async (req, res, next) => {
 commitotro = 2;
 
 module.exports = { requireAdmin }
-
-textoacabj= "agregado de vuelta"
