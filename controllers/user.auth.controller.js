@@ -22,7 +22,6 @@ const loginUser = async function(req, res) {
       }
     const payload = { user: user.id, roleId: user.roleId }
     const token = createToken(payload)
-    console.log(token)
     return res.json( {token: token} )
     })
   }
