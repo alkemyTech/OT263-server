@@ -14,14 +14,29 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	Entries.init(
 		{
-			name: DataTypes.STRING,
-			content: DataTypes.STRING,
-			image: DataTypes.STRING,
-			categoryId: DataTypes.NUMBER,
-			type: DataTypes.STRING,
-			deletedAt: DataTypes.DATE,
-			createdAt: DataTypes.DATE,
-			updatedAt: DataTypes.DATE
+			name: {
+				type: DataTypes.STRING,
+				validate: {
+					notEmpty: true,
+					len: [2, 45]
+				}
+			},
+			content: {
+				type: DataTypes.STRING,
+				validate: { notEmpty: true, len: [2, 255] }
+			},
+			image: { type: DataTypes.STRING, validate: { isUrl: true } },
+			categoryId: {
+				type: DataTypes.NUMBER,
+				validate: { isInt: true, min: 1 }
+			},
+			type: {
+				type: DataTypes.STRING,
+				validate: { notEmpty: true, len: [2, 255] }
+			},
+			deletedAt: { type: DataTypes.DATE, validate: { isDate: true } },
+			createdAt: { type: DataTypes.DATE, validate: { isDate: true } },
+			updatedAt: { type: DataTypes.DATE, validate: { isDate: true } }
 		},
 		{
 			sequelize,
