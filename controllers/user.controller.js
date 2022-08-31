@@ -17,7 +17,7 @@ class UserController {
         try{
             return res.status(200).json(await User.findAll())
         }catch(err){
-            return res.send(err)
+            return res.status(404).send({message:err.message})
         }
     }
 }
