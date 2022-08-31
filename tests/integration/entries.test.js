@@ -42,7 +42,7 @@ describe('PUT /news/:id', () => {
 			})
 	})
 
-	test('Should return Not Found when deletting an nonexistent entry', async () => {
+	test('Should return Not Found when updating an nonexistent entry', async () => {
 		const inexistentId = 999
 		await api
 			.put(`/news/${inexistentId}`)
