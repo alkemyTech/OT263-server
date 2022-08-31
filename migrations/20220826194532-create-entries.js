@@ -21,12 +21,13 @@ module.exports = {
 				type: Sequelize.STRING
 			},
 			categoryId: {
-				allowNull: false,
 				type: Sequelize.INTEGER,
 				references: {
-					model: Categories,
-					key: 'id'
-				}
+					model: 'Categories',
+					schema: 'schema'
+				},
+				key: 'id',
+				allowNull: false
 			},
 			type: {
 				allowNull: false,
