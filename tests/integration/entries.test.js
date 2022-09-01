@@ -14,7 +14,8 @@ describe('PUT /news/:id', () => {
 		await Entries.create({
 			name: 'Test activity',
 			content: 'Great activity',
-			image: 'https://images.unsplash.com/photo-1602622660687-db571538bff2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80',
+			image:
+				'https://images.unsplash.com/photo-1602622660687-db571538bff2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80',
 			categoryId: 1,
 			type: 'Entry'
 		})

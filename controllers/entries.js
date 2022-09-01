@@ -9,16 +9,13 @@ const updateEntry = async (req, res) => {
 		const { error } = validateEntry(updates)
 		if (error) return res.status(400).json(createError.BadRequest(error.details[0].message))
 
-		const response = await Entries.findOne({ where: { id } })
-		if (!response) return res.status(404).json(createError.NotFound())
+		const entry = await Entries.findByPk(id)
+		if (!entry) return res.status(404).json(createError.NotFound())
 
-		const [updatedRow] = await Entries.update(updates, { where: { id } })
-
-		const entry = response.dataValues
-		if (updatedRow) return res.status(200).json({ ...entry, ...updates })
+		await entry.update(updates)
+		return res.status(200).json(entry)
 	} catch (error) {
-		if (error.fields)
-			return res.status(400).json(createError.BadRequest(error.original.sqlMessage))
+		if (error.fields) return res.status(400).json(createError.BadRequest(error.original.sqlMessage))
 		return res.status(500).json(createError.InternalServerError())
 	}
 }
