@@ -4,16 +4,15 @@ const createError = require('http-errors')
 
 const updateEntry = async (req, res) => {
 	const { id } = req.params
-	const updates = req.body
+	const newEntry = req.body
 	try {
-		const { error } = validateEntry(updates)
+		const { error } = validateEntry(newEntry)
 		if (error) return res.status(400).json(createError.BadRequest(error.details[0].message))
 
-		const entry = await Entries.findByPk(id)
-		if (!entry) return res.status(404).json(createError.NotFound())
+		const [isUpdated] = await Entries.update(newEntry, { where: { id } })
+		if (!isUpdated) return res.status(404).json(createError.NotFound())
 
-		await entry.update(updates)
-		return res.status(200).json(entry)
+		return res.status(200).json(newEntry)
 	} catch (error) {
 		if (error.fields) return res.status(400).json(createError.BadRequest(error.original.sqlMessage))
 		return res.status(500).json(createError.InternalServerError())
