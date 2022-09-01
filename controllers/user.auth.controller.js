@@ -1,8 +1,20 @@
 const { User } = require('../models');
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
+const schema = require('../util/user.joi')
+const { createHash } = require('../util/bycrypt')
 const { createToken } = require('../services/token')
 
+const createUser =async (req, res) => {
+  try {
+      const value = await schema.validateAsync({...req.body})
+      const newUser = await User.create({...value, password:createHash(value.password)})    
+      return res.json(newUser)
+  }
+  catch (err) {        
+      return res.status(400).json(err)
+  }
+}
 
 const loginUser = async function(req, res) {
   const errors = validationResult(req);
@@ -27,4 +39,7 @@ const loginUser = async function(req, res) {
   }
 }
 
-module.exports = loginUser;
+module.exports = {
+    loginUser,
+    createUser
+  };
