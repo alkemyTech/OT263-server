@@ -8,27 +8,10 @@ const newsList = async function(req, res) {
             },
             attributes: ['name', 'image', 'createdAt']
         })
-        let response;
-        if (list.length){
-                response = {
-                    meta: {
-                        status: 200,
-                        url: '/news'
-                    },
-                    data: list
-                }
-            }else{
-                response = {
-                    meta: {
-                        status: 404,
-                        error: "No news Found"
-                    }
-                }
-            }
-        res.json(response);
+        return res.status(200).json(list)
 
     } catch (error) {
-        res.status(500).json(error)
+        return res.status(500).json(error)
     }
 }
 
