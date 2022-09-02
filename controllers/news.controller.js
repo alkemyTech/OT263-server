@@ -9,8 +9,8 @@ const newsList = async function(req, res) {
             attributes: ['name', 'image', 'createdAt']
         })
         let response;
-        if (list){
-                response ={
+        if (list.length){
+                response = {
                     meta: {
                         status: 200,
                         url: '/news'
@@ -18,9 +18,9 @@ const newsList = async function(req, res) {
                     data: list
                 }
             }else{
-                response ={
+                response = {
                     meta: {
-                        status: 400,
+                        status: 404,
                         error: "No news Found"
                     }
                 }
