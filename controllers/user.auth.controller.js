@@ -32,7 +32,7 @@ const loginUser = async function(req, res) {
       if(!match){
         return res.json({error: "Wrong Username And Password Combination", ok: false});
       }
-    const payload = { user: user.id, roleId: user.roleId }
+    const payload = { sub: user.id, roleId: user.roleId }
     const token = createToken(payload)
     return res.json( {token: token} )
     })
