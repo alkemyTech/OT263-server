@@ -10,6 +10,6 @@ router.use(requireAuth)
 router.use(requireAdmin)
 
 router.put('/:id', updateEntry)
-router.get('/news/:id', getNewsById)
+router.get('/:id', getNewsById)
 
 module.exports = router
