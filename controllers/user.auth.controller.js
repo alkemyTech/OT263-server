@@ -36,7 +36,7 @@ const createUser = async (req, res) => {
         });
         const newUserToken = await createTokenLogin(req, res);
 
-        return res.json({ token: newUserToken });
+        return res.status(201).json({ token: newUserToken });
     } catch (err) {
         return res.status(400).json(err);
     }
