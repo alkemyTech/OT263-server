@@ -3,7 +3,7 @@ const { Testimonials } =require ('../models')
 const updateTestimonial=async (req, res)=>{
     const { name, image, phone, address, welcomeText, deleteAt } = req.body
     try{
-        const testimonial= await Testimonials.findByPk(req.params.id)
+        const testimonial= await Testimonials.findByPk(req.params.id)        
         if(testimonial){
             testimonial.name=name,
             testimonial.image=image,
@@ -11,8 +11,9 @@ const updateTestimonial=async (req, res)=>{
             testimonial.address=address,
             testimonial.welcomeText=welcomeText,
             testimonial.deleteAt=deleteAt
-        }        
-        return res.status(200).json(await testimonial.save())
+            return res.status(200).json(await testimonial.save())
+        } 
+        throw new Error ("Testimonial not found", 404)
     }catch(err){
         return res.status(404).json({message:err.message})
     }
