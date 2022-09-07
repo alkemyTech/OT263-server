@@ -14,6 +14,6 @@ router.get('/', function(req, res, next) {
 
 router.get('/:id/public', findOrganizationById)
 
-router.post('/public', createOrganization)
+router.post('/', createOrganization)
 
 module.exports = router;
