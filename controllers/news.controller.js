@@ -2,16 +2,18 @@ const { Entries } = require('../models');
 
 const newsList = async (req, res) => {
     try {
-        const list = await Entries.findAll({
+        const [list] = await Entries.findAll({
             where:{
                 type: 'news'
             },
             attributes: ['name', 'image', 'createdAt']
         })
+        if (!list) return res.status(404).json('No News Found');
+        
         return res.status(200).json(list)
 
     } catch (error) {
-        return res.status(404).json(error)
+        return res.status(500).json(error)
 }
 }
 const getNewsById = async (req, res) => {
