@@ -9,8 +9,8 @@ router.use(express.json())
 router.use(requireAuth)
 router.use(requireAdmin)
 
+router.get('/', newsList);
 router.put('/:id', updateEntry)
 router.get('/:id', getNewsById)
-router.get('/', newsList);
 
 module.exports = router

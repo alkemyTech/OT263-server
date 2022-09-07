@@ -8,7 +8,7 @@ const newsList = async (req, res) => {
             },
             attributes: ['name', 'image', 'createdAt']
         })
-        if (!list) return res.status(404).json('No News Found');
+        if (!list) return res.status(404).json('No news found')
         
         return res.status(200).json(list)
 
