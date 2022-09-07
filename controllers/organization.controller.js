@@ -1,8 +1,8 @@
-const { Testimonials } = require('../models')
+const { Organization } = require('../models')
 
-const createTestimonial = async function(req,res) {
+const createOrganization = async function(req,res) {
   const {name, image, phone, address, welcomeText} = req.body;
-  Testimonials.create({
+  Organization.create({
     name: name,
     image: image,
     phone: phone,
@@ -11,7 +11,7 @@ const createTestimonial = async function(req,res) {
   }).then(testimonial => res.json(testimonial));
 }
 
-const testimonialsOrganizations = async function(req, res) {
+const findOrganizationById = async function(req, res) {
   const id = req.params.id
   const listOfTestimonials = await Testimonials.findByPk(id);
   const {name, image, phone, address, welcomeText} = listOfTestimonials;
@@ -25,6 +25,6 @@ const testimonialsOrganizations = async function(req, res) {
 }
 
 module.exports = {
-  testimonialsOrganizations,
-  createTestimonial
+  createOrganization,
+  findOrganizationById
 }
