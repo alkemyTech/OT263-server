@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const {
-  testimonialsOrganizations, 
-  createTestimonial
-} = require('../controllers/organization.public.controller')
+  findOrganizationById, 
+  createOrganization
+} = require('../controllers/organization.controller')
 
 
 /* GET organizations listing. */
@@ -12,8 +12,8 @@ router.get('/', function(req, res, next) {
   
 });
 
-router.get('/:id/public', testimonialsOrganizations)
+router.get('/:id/public', findOrganizationById)
 
-router.post('/public', createTestimonial)
+router.post('/', createOrganization)
 
 module.exports = router;
