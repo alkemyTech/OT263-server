@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const { requireAuth } = require('../middlewares/requireAuth')
+const { requireAdmin } = require('../middlewares/requireAdmin')
 const { getContacts } = require('../controllers/contacts.controller');
-const requireAdmin = require('../middlewares/requireAdmin');
-const requireAuth = require('../middlewares/requireAuth');
 
-router.get('/',[requireAuth, requireAdmin],  getContacts);
+
+//router.use(express.json())
+//router.use(requireAuth)
+//router.use(requireAdmin)
+
+router.get('/', getContacts);
 
 module.exports = router
