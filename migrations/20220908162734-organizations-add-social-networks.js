@@ -5,7 +5,7 @@ module.exports = {
         return queryInterface.sequelize.transaction((t) => {
             return Promise.all([
                 queryInterface.addColumn(
-                    "Testimonials",
+                    "Organizations",
                     "facebook",
                     {
                         type: Sequelize.STRING,
@@ -14,7 +14,7 @@ module.exports = {
                     { transaction: t }
                 ),
                 queryInterface.addColumn(
-                    "Testimonials",
+                    "Organizations",
                     "linkedin",
                     {
                         type: Sequelize.STRING,
@@ -23,7 +23,7 @@ module.exports = {
                     { transaction: t }
                 ),
                 queryInterface.addColumn(
-                    "Testimonials",
+                    "Organizations",
                     "instagram",
                     {
                         type: Sequelize.STRING,
@@ -38,9 +38,9 @@ module.exports = {
     async down(queryInterface, Sequelize) {
         return queryInterface.sequelize.transaction((t) => {
             return Promise.all([
-                queryInterface.removeColumn("Testimonials", "Facebook", { transaction: t }),
-                queryInterface.removeColumn("Testimonials", "Linkedin", { transaction: t }),
-                queryInterface.removeColumn("Testimonials", "Instagram", { transaction: t }),
+                queryInterface.removeColumn("Organizations", "facebook", { transaction: t }),
+                queryInterface.removeColumn("Organizations", "linkedin", { transaction: t }),
+                queryInterface.removeColumn("Organizations", "instagram", { transaction: t }),
             ]);
         });
     },
