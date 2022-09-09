@@ -6,7 +6,8 @@ const schema = Joi.object({
     content: Joi.string()
         .required(),
     image: Joi.string(),
-    content: Joi.string()
+    content: Joi.string(),
+    type:Joi.string()
 })   
 
 module.exports = schema
