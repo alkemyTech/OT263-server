@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-
+const { requireAuth } = require('../middlewares/requireAuth')
+const { requireAdmin } = require('../middlewares/requireAdmin')
 const {updateActivities} = require('../controllers/activities.controller');
 
-router.put ('/:id', updateActivities);
+router.put ('/:id', requireAuth, requireAdmin, updateActivities);
 
 module.exports = router
