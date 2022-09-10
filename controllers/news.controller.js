@@ -2,7 +2,7 @@ const { Entries } = require('../models');
 
 const newsList = async (req, res) => {
     try {
-        const [list] = await Entries.findAll({
+        const list = await Entries.findAll({
             where:{
                 type: 'news'
             },
@@ -13,7 +13,7 @@ const newsList = async (req, res) => {
         return res.status(200).json(list)
 
     } catch (error) {
-        return res.status(500).json(error)
+        return res.status(500).json({message: error.message})
 }
 }
 const getNewsById = async (req, res) => {
