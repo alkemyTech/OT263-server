@@ -1,4 +1,5 @@
 const { Entries } = require("../models")
+const createError = require('http-errors')
 
 const getNewsById = async (req, res) => {
     try {
@@ -13,14 +14,11 @@ const getNewsById = async (req, res) => {
 const deleteNews = async (req, res) => {
   const id = req.params.id
   try {
-    const entry = await Entries.findOne({ where: {id: id, type: "news"}})
-    if(!entry) { throw new Error("Don't entry")
-    } else {
-      await Entries.destroy({where: {id:id} })
-      return res.status(200).json("DELETED SUCCESS")
-    }
+    const entry = await Entries.destroy({ where: {id} })
+    if(!entry) return res.status(404).json(createError.NotFound())
+    return res.status(200).json("DELETED SUCCESS")
   } catch (err) {
-    return res.status(404).json({ message: err.message })
+    return res.status(500).json(createError.InternalServerError())
   }
 }
 
