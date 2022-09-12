@@ -1,5 +1,6 @@
 const { Categories } = require("../models");
 const createError = require("http-errors");
+const { updateCategorySchema } = require("../util/category.joi");
 
 class CategoryController {
     constructor() {}
@@ -22,10 +23,13 @@ class CategoryController {
     }
 
     updateCategory = async (req, res, next) => {
-        const id = req.params.id;
         try {
+            const id = req.params.id;
+            const { name, description } = req.body;
+            await updateCategorySchema.validateAsync({name, description});
+            
             const category = await this.findCategory(id);
-            const updatedCategory = await category.update(req.body);
+            const updatedCategory = await category.update({name, description});
             return res.status(200).json(updatedCategory);
         } catch (err) {
             next(err);
