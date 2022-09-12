@@ -6,6 +6,8 @@ const { requireAdmin } = require("../middlewares/requireAdmin");
 const CategoryController = require("../controllers/category.controller");
 const controller = new CategoryController();
 
-router.put('/:id', requireAuth, requireAdmin, controller.updateCategory);
+router.patch('/:id', requireAuth, requireAdmin, controller.updateCategory);
+
+router.post('/', requireAuth, requireAdmin, controller.createCategory); // POST created for testing purposes
 
 module.exports = router;
