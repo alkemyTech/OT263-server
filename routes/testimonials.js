@@ -1,17 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const { Router } = require('express')
 const {requireAuth} = require('../middlewares/requireAuth');
 const {requireAdmin} = require('../middlewares/requireAdmin');
+const { updateTestimonial, createTestimonial } = require('../controllers/testimonials.controller')
+const router = Router()
 
-const TestimonialsController = require('../controllers/testimonials.controller');
+router.use(requireAuth, requireAdmin)
 
-const controller = new TestimonialsController();
+router.put('/:id', updateTestimonial)
+router.post('/', createTestimonial);
 
-router.get('/', function(req, res, next) {
-    res.send('respond with a resource');
-    }
-);
-
-router.post('/', requireAuth, requireAdmin, controller.createTestimonial);
-
-module.exports = router;
+module.exports = router
