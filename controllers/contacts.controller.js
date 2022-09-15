@@ -21,7 +21,7 @@ const postContacts = async (req, res) => {
     } else {
       sendEmail(contact.email, subject, msg)
       sendEmail(
-        "ferny23@gmail.com", 
+        "ongsomosmas.demo@gmail.com", 
         contact.email, 
         contact.name + ": " + contact.message + ". " + contact.phone
       )
