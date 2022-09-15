@@ -1,5 +1,9 @@
 const { contacts } = require("../models")
 const schema = require("../util/contact.joi")
+const {sendEmail} = require("../services/nodemailer")
+
+const subject = "Mensaje enviado correctamente";
+const msg = "Muchas gracias por comunicarse con nosotros. A la brevedad responderemos su consulta"
 
 const postContacts = async (req, res) => {
   try {
@@ -11,8 +15,18 @@ const postContacts = async (req, res) => {
       phone: value.phone,
       message: value.message
     });
-
-    return res.status(200).json(contact);
+    
+    if(!contact) {
+      return res.status(404).json(createError.NotFound())
+    } else {
+      sendEmail(contact.email, subject, msg)
+      sendEmail(
+        "ferny23@gmail.com", 
+        contact.email, 
+        contact.name + ": " + contact.message + ". " + contact.phone
+      )
+      return res.status(200).json(contact);
+    }
   } catch (err) {
     return res.status(400).json(err);
   }
