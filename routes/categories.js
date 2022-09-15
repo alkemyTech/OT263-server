@@ -8,6 +8,6 @@ router.use(requireAuth, requireAdmin)
 
 router.post('/', createCategory)
 
-router.patch('/:id', updateCategory);
+router.put('/:id', updateCategory);
 
 module.exports = router
