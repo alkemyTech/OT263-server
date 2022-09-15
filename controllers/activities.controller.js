@@ -1,5 +1,6 @@
 const { Activities } = require("../models");
 const { validateActivity } = require("../util/activity.joi");
+const schema = require('../util/activitie.joi')
 
 const updateActivities = async (req, res) => {
     const {id} = req.params;
@@ -23,6 +24,17 @@ const updateActivities = async (req, res) => {
 	}
 }
 
+const createActivity=async (req, res)=>{
+    
+    try{
+        const value=await schema.validateAsync(req.body)
+        return res.json(await Activities.create(value))
+    }catch(err){
+        return res.status(400).json({message:err.message})
+    }
+}
+
 module.exports = {
-    updateActivities
+    updateActivities,
+    createActivity
 }
