@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { requireAdmin } = require('../middlewares/requireAdmin')
 const { requireAuth } = require('../middlewares/requireAuth')
-const { createCategory } = require('../controllers/categories')
+const { createCategory, updateCategory } = require('../controllers/categories')
 
 router.use(requireAuth, requireAdmin)
 
