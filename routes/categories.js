@@ -1,13 +1,13 @@
-var express = require('express');
-var router = express.Router();
-const { requireAuth } = require("../middlewares/requireAuth");
-const { requireAdmin } = require("../middlewares/requireAdmin");
+const express = require('express')
+const router = express.Router()
+const { requireAdmin } = require('../middlewares/requireAdmin')
+const { requireAuth } = require('../middlewares/requireAuth')
+const { createCategory } = require('../controllers/categories')
 
-const CategoryController = require("../controllers/category.controller");
-const controller = new CategoryController();
+router.use(requireAuth, requireAdmin)
 
-router.patch('/:id', requireAuth, requireAdmin, controller.updateCategory);
+router.post('/', createCategory)
 
-router.post('/', requireAuth, requireAdmin, controller.createCategory); // POST created for testing purposes
+router.patch('/:id', updateCategory);
 
-module.exports = router;
+module.exports = router
