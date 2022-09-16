@@ -1,4 +1,4 @@
-const { Members } = require("../models")
+const { Member } = require("../models")
 const schema = require("../util/member.joi");
 
 
@@ -9,7 +9,7 @@ const updateMember = async (req, res) => {
 		const { error } = await schema.validateAsync(member)
 		if (error) return res.status(400).json(createError.BadRequest(error.details[0].message))
 
-		const [isUpdated] = await Members.update(member, { where: { id } })
+		const [isUpdated] = await Member.update(member, { where: { id } })
 		if (!isUpdated) return res.status(404).json(createError.NotFound())
 
 		return res.status(200).json(member)
