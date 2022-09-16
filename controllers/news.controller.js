@@ -1,5 +1,22 @@
 const { Entries } = require("../models")
+const createError = require('http-errors')
 
+const newsList = async (req, res) => {
+    try {
+        const list = await Entries.findAll({
+            where:{
+                type: 'news'
+            },
+            attributes: ['name', 'image', 'createdAt']
+        })
+        if (!list) return res.status(404).json('No news found')
+        
+        return res.status(200).json(list)
+
+    } catch (error) {
+        return res.status(500).json({message: error.message})
+}
+}
 const getNewsById = async (req, res) => {
     try {
         const entriesNews = await Entries.findOne({ where: { id: req.params.id, type: "news" } })
@@ -8,6 +25,17 @@ const getNewsById = async (req, res) => {
     } catch (err) {
         return res.status(404).json({ message: err.message })
     }
+}
+
+const deleteNews = async (req, res) => {
+  const id = req.params.id
+  try {
+    const entry = await Entries.destroy({ where: {id} })
+    if(!entry) return res.status(404).json(createError.NotFound())
+    return res.status(200).json("DELETED SUCCESS")
+  } catch (err) {
+    return res.status(500).json(createError.InternalServerError())
+  }
 }
 
 const createNews =async(req, res)=> {
@@ -23,14 +51,16 @@ const createNews =async(req, res)=> {
             categoryId : categoryId,
             type : 'news'
         };
-        const newNews = await Entries.create(DTO);
+       const newNews = await Entries.create(DTO);
         return res.json(newNews);
     } catch (err) {
-        return res.status(400).json(err);
+        return res.status(400).json({message: err.message});
     }
 }
 
 module.exports = {
+    newsList,
     getNewsById,
+    deleteNews,
     createNews
 }
