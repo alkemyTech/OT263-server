@@ -19,13 +19,16 @@ const createOrganization = async function (req, res) {
 const findOrganizationById = async function (req, res) {
     const id = req.params.id;
     const organizationData = await Organization.findByPk(id);
-    const { name, image, phone, address, welcomeText } = organizationData;
+    const { name, image, phone, address, welcomeText, facebook, linkedin, instagram } = organizationData;
     res.json({
         name: name,
         image: image,
         phone: phone,
         address: address,
         welcomeText: welcomeText,
+        facebook,
+        linkedin,
+        instagram
     });
 };
 

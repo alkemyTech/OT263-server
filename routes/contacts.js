@@ -2,12 +2,15 @@ const express = require('express');
 const router = express.Router();
 const { requireAuth } = require('../middlewares/requireAuth')
 const { requireAdmin } = require('../middlewares/requireAdmin')
-const { getContacts } = require('../controllers/contacts.controller');
+const { getContacts, postContacts } = require('../controllers/contacts.controller');
+const { body } = require('express-validator');
 
 
-router.use(requireAuth)
-router.use(requireAdmin)
+router.get('/', requireAuth, requireAdmin, getContacts);
+router.post('/',
+  body('email').notEmpty().isEmail(),
+  body('name').notEmpty().isLength({ min: 3 }),
+  postContacts)
 
-router.get('/', getContacts);
 
-module.exports = router
+module.exports = router;
