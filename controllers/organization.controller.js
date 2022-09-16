@@ -32,9 +32,9 @@ const findOrganizationById = async function (req, res) {
 		instagram
 	})
 }
-const updateOrganization = (req, res) => {
-	console.log(req)
-	res.json(req.body.image)
+const updateOrganization = async (req, res) => {
+	console.log(req.file)
+	res.json(result)
 }
 
 module.exports = {
