@@ -9,6 +9,8 @@ const { requireAdmin } = require("../middlewares/requireAdmin");
 
 router.put('/:id',
   body('name').notEmpty().isLength({ min: 3 }),
+  requireAuth,
+  requireAdmin,
   updateMember
 )
 
