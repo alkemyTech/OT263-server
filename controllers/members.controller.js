@@ -5,7 +5,7 @@ const deleteMember = async (req, res) => {
   const {id} = req.params
 
   try {
-    const [delMember] = await Member.destroy({ where: {id} })
+    const delMember = await Member.destroy({ where: {id} })
     if (!delMember) return res.status(404).json(createError.NotFound())
 
     return res.status(200).json("DELETED SUCCESS")
