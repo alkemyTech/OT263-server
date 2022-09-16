@@ -51,10 +51,10 @@ const createNews =async(req, res)=> {
             categoryId : categoryId,
             type : 'news'
         };
-        const newNews = await Entries.create(DTO);
+       const newNews = await Entries.create(DTO);
         return res.json(newNews);
     } catch (err) {
-        return res.status(400).json(err);
+        return res.status(400).json({message: err.message});
     }
 }
 
