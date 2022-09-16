@@ -33,8 +33,7 @@ const findOrganizationById = async function (req, res) {
 	})
 }
 const updateOrganization = async (req, res) => {
-	console.log(req.file)
-	res.json(result)
+	return res.status(200).json(req.body)
 }
 
 module.exports = {
