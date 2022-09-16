@@ -1,5 +1,7 @@
 const { Categories } = require('../models')
 const createError = require('http-errors')
+const { updateCategorySchema } = require("../util/category.joi");
+
 const Joi = require('joi')
 
 const createCategory = async (req, res) => {
@@ -24,6 +26,24 @@ function validateCategory(entry) {
 	return schema.validate(entry)
 }
 
+const updateCategory = async (req, res, next) => {
+	try {
+		const id = req.params.id;
+		const { name, description } = req.body;
+		await updateCategorySchema.validateAsync({name, description});
+	
+		const updatedCategory = await Categories.update({name, description}, {where: {id}});
+		if (updatedCategory[0] === 0) {
+			throw createError.NotFound("Category not found");
+		}
+
+		return res.status(200).json(req.body);
+	} catch (err) {
+		next(err);
+	}
+}
+
 module.exports = {
-	createCategory
+	createCategory,
+	updateCategory,
 }
