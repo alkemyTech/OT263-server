@@ -7,7 +7,7 @@ const newsList = async (req, res) => {
             where:{
                 type: 'news'
             },
-            attributes: ['name', 'image', 'createdAt']
+            attributes: ['id','name', 'image', 'createdAt']
         })
         if (!list) return res.status(404).json('No news found')
         
