@@ -10,7 +10,6 @@ const { requireAdmin } = require('../middlewares/requireAdmin')
 const controller = new UserController()
 
 router.use(express.json())
-router.use(requireAuth)
 
 router.get('/', requireAuth, requireAdmin, controller.getUsers)
 
@@ -33,5 +32,5 @@ router.get('/auth/me', requireAuth, async function (req, res, next) {
 
 router.post('/auth/register', createUser)
 
-router.delete('/:id', controller.deleteUser)
+router.delete('/:id', requireAuth, requireAdmin, controller.deleteUser)
 module.exports = router
