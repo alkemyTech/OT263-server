@@ -1,12 +1,13 @@
 const { Router } = require('express')
-const {requireAuth} = require('../middlewares/requireAuth');
-const {requireAdmin} = require('../middlewares/requireAdmin');
-const { updateTestimonial, createTestimonial } = require('../controllers/testimonials.controller')
+const { updateTestimonial, createTestimonial, deleteTestimonial } = require('../controllers/testimonials.controller')
+const { requireAdmin } = require('../middlewares/requireAdmin')
+const { requireAuth } = require('../middlewares/requireAuth')
 const router = Router()
 
 router.use(requireAuth, requireAdmin)
 
 router.put('/:id', updateTestimonial)
 router.post('/', createTestimonial);
+router.delete('/:id', requireAuth, requireAdmin , deleteTestimonial)
 
 module.exports = router
