@@ -4,10 +4,8 @@ const { requireAdmin } = require('../middlewares/requireAdmin')
 const { requireAuth } = require('../middlewares/requireAuth')
 const router = Router()
 
-router.use(requireAuth, requireAdmin)
-
-router.put('/:id', updateTestimonial)
-router.post('/', createTestimonial);
+router.put('/:id', requireAuth, requireAdmin, updateTestimonial)
+router.post('/', requireAuth, createTestimonial);
 router.delete('/:id', requireAuth, requireAdmin , deleteTestimonial)
 
 module.exports = router
