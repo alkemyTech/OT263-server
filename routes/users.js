@@ -32,5 +32,5 @@ router.get('/auth/me', requireAuth, async function (req, res, next) {
 
 router.post('/auth/register', createUser)
 
-router.delete('/:id', controller.deleteUser)
+router.delete('/:id', requireAuth, requireAdmin, controller.deleteUser)
 module.exports = router
