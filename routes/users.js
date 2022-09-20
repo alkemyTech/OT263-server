@@ -10,7 +10,6 @@ const { requireAdmin } = require('../middlewares/requireAdmin')
 const controller = new UserController()
 
 router.use(express.json())
-router.use(requireAuth)
 
 router.get('/', requireAuth, requireAdmin, controller.getUsers)
 

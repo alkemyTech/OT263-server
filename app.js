@@ -15,6 +15,10 @@ const testimonialsRouter= require('./routes/testimonials')
 const contactsRouter = require('./routes/contacts')
 const categoriesRouter = require('./routes/categories')
 const membersRouter = require('./routes/members')
+<<<<<<< HEAD
+=======
+
+>>>>>>> 39829ff5e1334835896964416b2d71ce1550c91c
 const handleUpload = require('./middlewares/handleUpload')
 const handleStorage = require('./middlewares/handleStorage')
 
