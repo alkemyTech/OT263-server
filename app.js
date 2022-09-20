@@ -16,6 +16,9 @@ const contactsRouter = require('./routes/contacts')
 const categoriesRouter = require('./routes/categories')
 const membersRouter = require('./routes/members')
 
+const handleUpload = require('./middlewares/handleUpload')
+const handleStorage = require('./middlewares/handleStorage')
+
 const app = express()
 app.use(cors())
 
@@ -28,6 +31,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(handleUpload)
+app.use(handleStorage)
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
