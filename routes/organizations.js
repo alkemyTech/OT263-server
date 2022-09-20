@@ -10,7 +10,7 @@ const { requireAuth } = require('../middlewares/requireAuth');
 
 
 router.get('/:id/public', findOrganizationById)
-router.post('/', createOrganization)
+router.post('/', requireAuth, requireAdmin, createOrganization)
 router.put('/:id', requireAuth, requireAdmin, updateOrganization)
 
 module.exports = router;
