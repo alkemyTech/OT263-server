@@ -1,5 +1,4 @@
-const { testimonials } =require ('../models');
-const { createTestimonialSchema } = require('../util/testimonial.joi');
+const { testimonials } =require ('../models')
 
 const updateTestimonial=async (req, res)=>{    
     try{
@@ -11,17 +10,6 @@ const updateTestimonial=async (req, res)=>{
     }
 }
 
-async function createTestimonial(req, res) {
-    try {    
-        const { name, content, image } = req.body;
-        await createTestimonialSchema.validateAsync({ name, content});
-        const newTestimonial = await testimonials.create({ name, content, image });
-        return res.status(201).json(newTestimonial);
-    } catch (err) {
-        return res.status(400).send({ message: err.message })
-    }
-
-}
 const deleteTestimonial=async (req,res)=>{
     try{
         const result= await testimonials.destroy({where:{id:req.params.id}})
@@ -34,6 +22,5 @@ const deleteTestimonial=async (req,res)=>{
 
 module.exports = {
     updateTestimonial,
-    createTestimonial,
     deleteTestimonial
 }
