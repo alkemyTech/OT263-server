@@ -37,10 +37,8 @@ describe("GET /users/auth/me", () => {
             .set("Accept", "application/json")
             .set("Authorization", `Bearer ${token}`)
             .expect(function (res) {
-                delete res.body.createdAt;
-                delete res.body.updatedAt;
-                delete entry.createdAt;
-                delete entry.updatedAt;
+                res.body.createdAt = entry.createdAt;
+                res.body.updatedAt = entry.updatedAt;
 
                 expect(res.status).toBe(200);
                 expect(res.body).toEqual(entry);
