@@ -49,6 +49,19 @@ const updateMember = async (req, res) => {
 	}
 }
 
+const deleteMember = async (req, res) => {
+  const {id} = req.params
+
+  try {
+    const delMember = await Member.destroy({ where: {id} })
+    if (!delMember) return res.status(404).json(createError.NotFound())
+
+    return res.status(200).json("DELETED SUCCESS")
+  } catch (error) {
+		if (error.fields) return res.status(400).json(createError.BadRequest(error.original.sqlMessage))
+		return res.status(500).json(createError.InternalServerError())
+	}
+} 
 
 function validateMember(member) {
 	const schema = Joi.object({
@@ -63,5 +76,7 @@ function validateMember(member) {
 module.exports = {
   updateMember,
   getMembers,
-  createMember
+  createMember,
+  deleteMember
 }
+ 
