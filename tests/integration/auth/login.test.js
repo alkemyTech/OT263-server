@@ -36,8 +36,25 @@ describe("POST /auth/login", () => {
     });
 
     test("Should return Bad Request when invalid credentials", async () => {
-        const invalidEmail = "invalidmail@mail.com";
-        const invalidPassword = "invalidpassword";
+        const invalidEmail = "invalidmail";
+        const invalidPassword = 12;
+
+        await api
+            .post("/users/auth/login")
+            .send({ email, password: invalidPassword })
+            .set("Accept", "application/json")
+            .expect(400);
+
+        await api
+            .post("/users/auth/login")
+            .send({ email: invalidEmail, password })
+            .set("Accept", "application/json")
+            .expect(400);
+    });
+
+    test("Should return Bad Request when credentials are incorrect", async () => {
+        const invalidEmail = "not.a.user@mail.com";
+        const invalidPassword = "incorrectpassword";
 
         await api
             .post("/users/auth/login")
