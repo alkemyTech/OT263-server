@@ -11,7 +11,6 @@ const controller = new UserController()
 
 router.use(express.json())
 
-
 router.get('/', requireAuth, requireAdmin, controller.getUsers)
 
 router.post(
