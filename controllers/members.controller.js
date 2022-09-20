@@ -34,7 +34,7 @@ const updateMember = async (req, res) => {
 
 const getMembers = async (req, res) => {
   try {
-    const [member] = await Member.findAll()
+    const member = await Member.findAll()
     if (!member) return res.status(404).json(createError.NotFound())
 
     return res.status(200).json(member)
