@@ -1,9 +1,7 @@
 var express = require("express");
 var router = express.Router();
-const { deleteMember } = require('../controllers/members.controller')
 const { body } = require('express-validator');
-const { updateMember } = require('../controllers/members.controller')
-const { getMembers } = require('../controllers/members.controller')
+const { updateMember, deleteMember, getMembers } = require('../controllers/members.controller')
 const { requireAuth } = require("../middlewares/requireAuth");
 const { requireAdmin } = require("../middlewares/requireAdmin");
 
