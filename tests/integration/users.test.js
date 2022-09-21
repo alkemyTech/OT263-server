@@ -1,77 +1,45 @@
 const supertest = require('supertest')
 const app = require('../../app')
 const { createToken } = require('../../services/token')
+const { User } = require('../../models')
 
 const api = supertest(app)
 
 describe('/users', () => {
-  let TOKEN
+  let ADMIN_TOKEN
+  let USER_TOKEN
+  let REGULAR_USER
 
-  const testUser = {
-    firstName: 'tester',
-    lastName: 'user',
-    email: 'test@mal.com',
-    password: 'test123'
-  }
+  beforeAll(async () => {
+    const testUser = {
+      firstName: 'tester',
+      lastName: 'user',
+      email: 'test@mal.com',
+      password: 'test123'
+    }
 
-  beforeAll(() => {
-    TOKEN = createToken({
-      sub: 1,
-      roleId: 1,
-      email: 'admin@somos-mas.org',
-      password: 'adminpassword'
+    const adminUser = {
+      firstName: 'tester',
+      lastName: 'admin',
+      email: 'admin@mal.com',
+      password: 'test123',
+      roleId: 1
+    }
+
+    await User.create(adminUser).then(({ dataValues: user }) => {
+      user.sub = user.id
+      ADMIN_TOKEN = createToken(user)
+    })
+
+    await User.create(testUser).then(({ dataValues: user }) => {
+      user.sub = user.id
+      USER_TOKEN = createToken(user)
+      REGULAR_USER = user
     })
   })
 
-  describe('POST /auth/register', () => {
-    test('Should register the user when valid credentials', async () => {
-      await api
-        .post('/users/auth/register')
-        .set('Accept', 'application/json')
-        .send(testUser)
-        .expect(201)
-    })
-
-    test('Should return error when invalid or missing credentials', async () => {
-      await api.post('/users/auth/register').set('Accept', 'application/json').send({}).expect(400)
-    })
-  })
-
-  describe('POST /auth/login', () => {
-    test('Should login user when valid credentials', async () => {
-      await api
-        .post('/users/auth/login')
-        .set('Accept', 'application/json')
-        .send(testUser)
-        .expect(200)
-        .expect((err, res) => {
-          if (err) {
-            throw err
-          }
-          expect(res.body).should.have.property('token')
-          return res.body.token
-        })
-    })
-
-    test('Should return error when invalid credentials', async () => {
-      const invalidUser = {
-        email: 'thisis@invalid.mail',
-        password: 'alsoAnInvalidPassword'
-      }
-
-      await api
-        .post('/users/auth/login')
-        .set('Accept', 'application/json')
-        .send(JSON.stringify(invalidUser))
-        .expect(400)
-        .expect((err, res) => {
-          if (err) {
-            throw err
-          }
-          expect(res.body).should.have.property('errors')
-          return res.body.errors
-        })
-    })
+  afterAll(() => {
+    User.destroy({ where: { firstName: REGULAR_USER.firstName } })
   })
 
   describe('GET /', () => {
@@ -79,7 +47,7 @@ describe('/users', () => {
       await api
         .get('/users')
         .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${TOKEN}`)
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         .expect(200)
     })
 
@@ -88,43 +56,36 @@ describe('/users', () => {
     })
   })
 
-  describe('GET /auth/me', () => {
-    test('Should return user when valid id', async () => {
+  describe('DELETE /users/:id', () => {
+    test('Should return Success when valid credentials', async () => {
       await api
-        .get('/users/auth/me')
+        .delete(`/users/${REGULAR_USER.id}`)
         .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${TOKEN}`)
-        .expect(200)
+        .set('Authorization', `Bearer ${USER_TOKEN}`)
+        .expect(204)
+    })
+
+    test('Should return Not Found when deletting an nonexistent user', async () => {
+      const fakeUser = { id: 999 }
+      const fakeUserToken = createToken(fakeUser)
+
+      await api
+        .delete(`/users/999`)
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${fakeUserToken}`)
+        .expect(404)
+    })
+
+    test('Should return Unauthorized when no token provided', async () => {
+      await api.delete('/users/1').set('Accept', 'application/json').expect(401)
+    })
+
+    test('Should return Forbidden token user is different to params user', async () => {
+      await api
+        .delete(`/users/${REGULAR_USER.id + 1}`)
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${USER_TOKEN}`)
+        .expect(403)
     })
   })
-
-  // describe('DELETE /users/:id', () => {
-  //   test('Should return Success when valid credentials', async () => {
-  //     await api
-  //       .delete('/users/1')
-  //       .set('Accept', 'application/json')
-  //       .set('Authorization', `Bearer ${TOKEN}`)
-  //       .expect(204)
-  //   })
-
-  //   test('Should return Not Found when deletting an nonexistent user', async () => {
-  //     await api
-  //       .delete('/users/1')
-  //       .set('Accept', 'application/json')
-  //       .set('Authorization', `Bearer ${TOKEN}`)
-  //       .expect(404)
-  //   })
-
-  //   test('Should return Unauthorized when no token provided', async () => {
-  //     await api.delete('/users/1').set('Accept', 'application/json').expect(401)
-  //   })
-
-  //   test('Should return Forbidden token user is different to params user', async () => {
-  //     await api
-  //       .delete('/users/3')
-  //       .set('Accept', 'application/json')
-  //       .set('Authorization', `Bearer ${TOKEN}`)
-  //       .expect(403)
-  //   })
-  // })
 })
