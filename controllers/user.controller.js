@@ -14,8 +14,7 @@ class UserController {
 
 	async deleteUser(req, res) {
 		const { sub: id } = req.user
-		console.log(req.user)
-		if(id !== req.params.id) return res.status(403).json(createError.Forbidden())
+		if(id != req.params.id) return res.status(403).json(createError.Forbidden())
 		try {
 			const row = await User.destroy({ where: { id } })
 			if (!row) return res.status(404).json(createError.NotFound())

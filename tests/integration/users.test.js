@@ -6,9 +6,10 @@ const { User } = require('../../models')
 const api = supertest(app)
 
 describe('/users', () => {
+  let ADMIN_USER
   let ADMIN_TOKEN
-  let USER_TOKEN
   let REGULAR_USER
+  let USER_TOKEN
 
   beforeAll(async () => {
     const testUser = {
@@ -29,6 +30,7 @@ describe('/users', () => {
     await User.create(adminUser).then(({ dataValues: user }) => {
       user.sub = user.id
       ADMIN_TOKEN = createToken(user)
+      ADMIN_USER = user
     })
 
     await User.create(testUser).then(({ dataValues: user }) => {
@@ -66,7 +68,7 @@ describe('/users', () => {
     })
 
     test('Should return Not Found when deletting an nonexistent user', async () => {
-      const fakeUser = { id: 999 }
+      const fakeUser = { sub: 999 }
       const fakeUserToken = createToken(fakeUser)
 
       await api
@@ -82,9 +84,9 @@ describe('/users', () => {
 
     test('Should return Forbidden token user is different to params user', async () => {
       await api
-        .delete(`/users/${REGULAR_USER.id + 1}`)
+        .delete(`/users/${ADMIN_USER.id + 1}`)
         .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${USER_TOKEN}`)
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         .expect(403)
     })
   })
