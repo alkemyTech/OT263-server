@@ -4,20 +4,18 @@ const bcrypt = require("bcrypt");
 const schema = require("../util/user.joi");
 const { createHash } = require("../util/bycrypt");
 const { createToken } = require("../services/token");
+const createHttpError = require("http-errors");
 
-const createTokenLogin = async (req, res) => {
+const createTokenLogin = async (req) => {
     const { email, password } = req.body;
     const user = await User.findOne({ where: { email: email } });
 
     if (!user) {
-        return res.status(404).json({ error: "User Doesn't Exist", ok: false });
+        throw createHttpError(400, "Invalid credentials. Please check your email and password.");
     } else {
         const token = bcrypt.compare(password, user.password).then((match) => {
             if (!match) {
-                return res.json({
-                    error: "Wrong Username And Password Combination",
-                    ok: false,
-                });
+                throw createHttpError(400, "Invalid credentials. Please check your email and password.");
             }
             const payload = { sub: user.id, roleId: user.roleId };
             const token = createToken(payload);
@@ -43,12 +41,16 @@ const createUser = async (req, res) => {
 };
 
 const loginUser = async function (req, res) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const token = await createTokenLogin(req);
+        return res.json({ token: token });
+    } catch (err) {
+        return res.status(400).json(err);
     }
-    const token = await createTokenLogin(req, res);
-    return res.json({ token: token });
 };
 
 module.exports = {
