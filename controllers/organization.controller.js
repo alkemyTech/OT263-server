@@ -32,7 +32,18 @@ const findOrganizationById = async function (req, res) {
     });
 };
 
+const updateOrganization= async (req, res)=>{
+    try{
+        const organization= await Organization.update(req.body, {where:{id:req.params.id}})                
+        if(organization[0])return res.status(200).json(req.body)
+        throw new Error ("Organization not found")
+    }catch(err){
+        return res.status(404).json({message:err.message})
+    }
+}
+
 module.exports = {
     createOrganization,
     findOrganizationById,
+    updateOrganization
 };

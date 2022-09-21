@@ -1,19 +1,16 @@
 var express = require('express');
 var router = express.Router();
 const {
-  findOrganizationById, 
-  createOrganization
-} = require('../controllers/organization.controller')
+  findOrganizationById,
+  createOrganization,
+  updateOrganization
+} = require('../controllers/organization.controller');
+const { requireAdmin } = require('../middlewares/requireAdmin');
+const { requireAuth } = require('../middlewares/requireAuth');
 
-
-/* GET organizations listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-  
-});
 
 router.get('/:id/public', findOrganizationById)
-
 router.post('/', createOrganization)
+router.put('/:id', requireAuth, requireAdmin, updateOrganization)
 
 module.exports = router;
