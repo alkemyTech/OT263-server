@@ -26,19 +26,19 @@ const createTokenLogin = async (req) => {
 };
 
 const createUser = async (req, res) => {
-  try {
-    const value = await schema.validateAsync({ ...req.body })
-    await User.create({
-      ...value,
-      password: createHash(value.password)
-    })
-    const newUserToken = await createTokenLogin(req, res)
+    try {
+        const value = await schema.validateAsync({ ...req.body });
+        await User.create({
+            ...value,
+            password: createHash(value.password),
+        });
+        const newUserToken = await createTokenLogin(req, res);
 
-    return res.status(201).json({ token: newUserToken })
-  } catch (err) {
-    return res.status(400).json(err)
-  }
-}
+        return res.status(201).json({ token: newUserToken });
+    } catch (err) {
+        return res.status(400).json(err);
+    }
+};
 
 const loginUser = async function (req, res) {
     try {
@@ -54,6 +54,6 @@ const loginUser = async function (req, res) {
 };
 
 module.exports = {
-  loginUser,
-  createUser
-}
+    loginUser,
+    createUser,
+};
