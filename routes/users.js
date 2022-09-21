@@ -22,11 +22,11 @@ router.post(
 
 router.get('/auth/me', requireAuth, async function (req, res, next) {
         try {
-          const userId = req.user.sub
-          const user = await controller.getUserById(userId)
+                const userId = req.user.sub
+                const user = await controller.getUserById(userId)
           res.send(user)
         } catch (err) {
-          next(err)
+                next(err)
         }
 })
 
