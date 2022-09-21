@@ -14,20 +14,20 @@ router.use(express.json())
 router.get('/', requireAuth, requireAdmin, controller.getUsers)
 
 router.post(
-  '/auth/login',
-  body('email').notEmpty().isEmail(),
-  body('password').isLength({ min: 5 }),
-  loginUser
+        '/auth/login',
+        body('email').notEmpty().isEmail(),
+        body('password').isLength({ min: 5 }),
+        loginUser
 )
 
 router.get('/auth/me', requireAuth, async function (req, res, next) {
-  try {
-    const userId = req.user.sub
-    const user = await controller.getUserById(userId)
-    res.send(user)
-  } catch (err) {
-    next(err)
-  }
+        try {
+          const userId = req.user.sub
+          const user = await controller.getUserById(userId)
+          res.send(user)
+        } catch (err) {
+          next(err)
+        }
 })
 
 router.post('/auth/register', createUser)
