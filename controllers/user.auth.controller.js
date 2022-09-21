@@ -57,4 +57,3 @@ module.exports = {
     loginUser,
     createUser,
 };
-
