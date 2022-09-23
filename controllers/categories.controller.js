@@ -3,6 +3,15 @@ const createError = require('http-errors')
 const { updateCategorySchema } = require("../util/category.joi");
 const Joi = require('joi')
 
+const getCategories = async (req, res) => {
+	try {
+		const categories = await Categories.findAll()
+		return res.status(200).json(categories)
+	} catch (err) {
+		return res.status(404).json(createError.NotFound(err.message))
+	}
+}
+
 const createCategory = async (req, res) => {
 	try {
 		const { error } = validateCategory(req.body)
@@ -59,5 +68,6 @@ const deleteCategory = async (req, res) => {
 module.exports = {
 	createCategory,
 	updateCategory,
-	deleteCategory
+	deleteCategory,
+	getCategories
 }

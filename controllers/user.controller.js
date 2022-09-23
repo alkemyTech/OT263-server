@@ -39,6 +39,18 @@ class UserController {
             return res.status(404).send({message:err.message})
         }
     }
+
+	async updateUser(req, res){
+		const { sub: id } = req.user
+		if(id != req.params.id) return res.status(403).json(createError.Forbidden())
+		try{
+			const user = await User.update(req.body, {where: {id}})
+			if(!user) return res.status(404).json(createError.NotFound())
+			return res.status(200).json(user)
+		}catch(err){
+			return res.status(500).json(createError.InternalServerError())
+		}
+	}
 }
 
 module.exports = UserController

@@ -13,13 +13,6 @@ router.use(express.json())
 
 router.get('/', requireAuth, requireAdmin, controller.getUsers)
 
-router.post(
-        '/auth/login',
-        body('email').notEmpty().isEmail(),
-        body('password').isLength({ min: 5 }),
-        loginUser
-)
-
 router.get('/auth/me', requireAuth, async function (req, res, next) {
         try {
                 const userId = req.user.sub
@@ -30,7 +23,16 @@ router.get('/auth/me', requireAuth, async function (req, res, next) {
         }
 })
 
+router.post(
+        '/auth/login',
+        body('email').notEmpty().isEmail(),
+        body('password').isLength({ min: 5 }),
+        loginUser
+)
 router.post('/auth/register', createUser)
 
+router.put('/:id', requireAuth, requireAdmin, controller.updateUser)
 router.delete('/:id', requireAuth, controller.deleteUser)
+
+
 module.exports = router

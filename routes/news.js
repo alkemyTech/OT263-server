@@ -10,6 +10,6 @@ router.get('/', newsList);
 router.put('/:id', requireAuth, requireAdmin, updateEntry)
 router.get('/:id', getNewsById)
 router.delete('/:id', requireAuth, requireAdmin, deleteNews)
-router.post('/', createNews);
+router.post('/', requireAuth, requireAdmin, createNews);
 
 module.exports = router

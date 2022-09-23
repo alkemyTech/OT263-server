@@ -1,6 +1,26 @@
 const { testimonials } =require ('../models');
 const { createTestimonialSchema } = require('../util/testimonial.joi');
 
+const getTestimonials=async (req,res)=>{
+    try{
+        const allTestimonials=await testimonials.findAll();
+        return res.status(200).json(allTestimonials);
+    }catch(err){
+        return res.status(404).send({message:err.message})
+    }
+}
+
+const findTestimonial=async (req,res)=>{
+    try{
+        const {id}=req.params;
+        const testimonial=await testimonials.findByPk(id);
+        if(!testimonial) return res.status(404).json({message:"Testimonial not found"});
+        return res.status(200).json(testimonial);
+    }catch(err){
+        return res.status(404).send({message:err.message})
+    }
+}
+
 const updateTestimonial=async (req, res)=>{    
     try{
         const testimonial= await testimonials.update(req.body, {where:{id:req.params.id}})                
@@ -35,5 +55,7 @@ const deleteTestimonial=async (req,res)=>{
 module.exports = {
     updateTestimonial,
     createTestimonial,
-    deleteTestimonial
+    deleteTestimonial,
+    getTestimonials,
+    findTestimonial
 }

@@ -59,6 +59,7 @@ const createMember = async (req, res) => {
       return res.status(500).json({message: err.message});
   }
 }
+
 function validateMember(member) {
 const schema = Joi.object({
   name: Joi.string().required(),
