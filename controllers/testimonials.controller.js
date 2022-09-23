@@ -32,8 +32,17 @@ const deleteTestimonial=async (req,res)=>{
     }
 }
 
+const getTestimonials= async (req, res)=>{
+    try{
+        return res.status(200).json(await testimonials.findAll())
+    }catch(err){
+        return res.status(404).send({message:err.message})
+    }
+}
+
 module.exports = {
     updateTestimonial,
     createTestimonial,
-    deleteTestimonial
+    deleteTestimonial,
+    getTestimonials
 }
