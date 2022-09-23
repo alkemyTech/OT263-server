@@ -33,7 +33,7 @@ describe("POST /organizations", () => {
             .expect(200)            
     })
 
-    test("response whit 401 unauthorization", async () => {
+    test("response whit 401 unauthorization-token none", async () => {
         await api.post('/organizations')
             .send({
                 name: "test",
@@ -43,6 +43,20 @@ describe("POST /organizations", () => {
                 welcomeText: "welcomeText"
             })
             .set('Accept', 'application/json')
+            .expect(401)            
+    })
+
+    test("response whit 401 unauthorization-token bad", async () => {
+        await api.post('/organizations')
+            .send({
+                name: "test",
+                image: "image",
+                phone: 123456,
+                address: "address",
+                welcomeText: "welcomeText"
+            })
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bad token`)
             .expect(401)            
     })
 })
@@ -76,7 +90,7 @@ describe("PUT /organizations", () => {
             .expect(404)            
     })
 
-    test("response whit 401, unauthorization", async () => {
+    test("response whit 401, unauthorization-token none", async () => {
         await api.put('/organizations/1')
             .send({
                 name: "test",
@@ -86,6 +100,19 @@ describe("PUT /organizations", () => {
                 welcomeText: "welcomeText"
             })
             .set('Accept', 'application/json')            
+            .expect(401)            
+    })
+    test("response whit 401, unauthorization-token bad", async () => {
+        await api.put('/organizations/1')
+            .send({
+                name: "test",
+                image: "image",
+                phone: 123456,
+                address: "address",
+                welcomeText: "welcomeText"
+            })
+            .set('Accept', 'application/json')   
+            .set('Authorization', `Bad token`)         
             .expect(401)            
     })
 })
