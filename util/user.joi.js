@@ -1,31 +1,37 @@
 const Joi = require('joi');
 
-const schema = Joi.object({
-    firstName: Joi.string()
-        .alphanum()
-        .min(3)
-        .max(30)
-        .required(),
+const userData = Joi.object({
+    firstName: Joi.string().min(2).max(30),
+    lastName: Joi.string().min(2).max(30),
+    email: Joi.string().email(),
+    password: Joi.string().min(5),
+});
 
-    lastName: Joi.string()
-        .alphanum()
-        .min(3)
-        .max(30)
-        .required(),
-
-    password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
-
-    repeat_password: Joi.ref('password'),
-
-    access_token: [
-        Joi.string(),
-        Joi.number()
-    ],
-
-    email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+const createUserSchema = Joi.object({
+    firstname: userData.required(),
+    lastname: userData.required(),
+    email: userData.required(),
+    password: userData.required(),
 })   
+const findUserSchema = Joi.object({
+    id: Joi.number().integer().required(),
+})
 
-module.exports = schema
+const updateUserSchema = Joi.object({
+    ...userData,
+})
+
+
+const loginUserSchema = Joi.object({
+    email: userData.required(),
+    password: userData.required(),
+})
+
+module.exports = {
+    createUserSchema,
+    updateUserSchema,
+    findUserSchema,
+    loginUserSchema,
+}
+
 
