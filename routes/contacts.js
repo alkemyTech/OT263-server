@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { requireAuth } = require('../middlewares/requireAuth')
-const { requireAdmin } = require('../middlewares/requireAdmin')
-const { getContacts, postContacts } = require('../controllers/contacts.controller');
-const { body } = require('express-validator');
+const {
+    getContacts,
+    postContacts,
+} = require('../controllers/contacts.controller');
+const { validationMiddleware } = require('../middlewares/validationMiddleware');
+const { contactSchema } = require('../util/contact.joi');
 
 router.get('/', getContacts);
-router.post('/',
-  body('email').notEmpty().isEmail(),
-  body('name').notEmpty().isLength({ min: 3 }),
-  postContacts)
+router.post('/', validationMiddleware(contactSchema, 'body'), postContacts);
 
 module.exports = router;
