@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const { loginUser, createUser } = require('../controllers/auth.controller');
+const {
+    loginUser,
+    createUser,
+    getMe,
+} = require('../controllers/auth.controller');
 const { requireAuth } = require('../middlewares/requireAuth');
 const { requireAdmin } = require('../middlewares/requireAdmin');
 const { validationMiddleware } = require('../middlewares/validationMiddleware');
@@ -18,7 +22,6 @@ router.use(express.json());
 
 //To user controller
 router.get('/', requireAuth, requireAdmin, controller.getUsers);
-router.get('/auth/me', requireAuth, controller.getMe);
 router.put(
     '/:id',
     requireAuth,
@@ -44,5 +47,6 @@ router.post(
     validationMiddleware(loginUserSchema, 'body'),
     loginUser
 );
+router.get('/auth/me', requireAuth, getMe);
 
 module.exports = router;
