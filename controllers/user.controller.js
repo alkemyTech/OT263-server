@@ -14,11 +14,11 @@ class UserController {
     }
 
     async getMe(req, res, next) {
-		const { id } = req.user.sub;
+		const id  = req.user.sub;
         try {
             const user = await User.findByPk(id);
             if (!user) {
-                throw createError.NotFound('User not found');
+                throw createError.NotFound('Usuario no encontrado');
             }
             return res.status(200).json(user);
         } catch (err) {

@@ -1,9 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {
-    loginUser,
-    createUser,
-} = require('../controllers/user.auth.controller');
+const { loginUser, createUser } = require('../controllers/auth.controller');
 const { requireAuth } = require('../middlewares/requireAuth');
 const { requireAdmin } = require('../middlewares/requireAdmin');
 const { validationMiddleware } = require('../middlewares/validationMiddleware');
@@ -19,12 +16,12 @@ const controller = new UserController();
 
 router.use(express.json());
 
+//To user controller
 router.get('/', requireAuth, requireAdmin, controller.getUsers);
 router.get('/auth/me', requireAuth, controller.getMe);
 router.put(
     '/:id',
     requireAuth,
-    requireAdmin,
     validationMiddleware(findUserSchema, 'params'),
     validationMiddleware(updateUserSchema, 'body'),
     controller.updateUser

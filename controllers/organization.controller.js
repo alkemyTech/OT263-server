@@ -1,49 +1,53 @@
-const { Organization } = require("../models");
+const { Organization } = require('../models');
 
-const createOrganization = async function (req, res) {
+const createOrganization = async function (req, res, next) {
+    const { name, image, phone, address, welcomeText } = req.body;
     try {
-        const { name, image, phone, address, welcomeText } = req.body;
         const newOrganization = await Organization.create({
-            name: name,
-            image: image,
-            phone: phone,
-            address: address,
-            welcomeText: welcomeText,
+            name,
+            image,
+            phone,
+            address,
+            welcomeText,
         });
-        return res.json(newOrganization);
+        
+        return res.status(201).json(newOrganization);
     } catch (err) {
-        res.status(400).json(err);
+        next(err);
     }
 };
 
-const findOrganizationById = async function (req, res) {
+const findOrganizationById = async function (req, res, next) {
     const id = req.params.id;
-    const organizationData = await Organization.findByPk(id);
-    const { name, image, phone, address, welcomeText, facebook, linkedin, instagram } = organizationData;
-    res.json({
-        name: name,
-        image: image,
-        phone: phone,
-        address: address,
-        welcomeText: welcomeText,
-        facebook,
-        linkedin,
-        instagram
-    });
+    try {
+        const organizationData = await Organization.findByPk(id);
+        if (!organizationData) {
+            throw createError.NotFound('No hemos encontrado la organización');
+        }
+
+        return res.status(200).json(organizationData);
+    } catch (err) {
+        next(err);
+    }
 };
 
-const updateOrganization= async (req, res)=>{
-    try{
-        const organization= await Organization.update(req.body, {where:{id:req.params.id}})                
-        if(organization[0])return res.status(200).json(req.body)
-        throw new Error ("Organization not found")
-    }catch(err){
-        return res.status(404).json({message:err.message})
+const updateOrganization = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+        const organization = await Organization.update(req.body, {
+            where: { id },
+        });
+        if (!organization[0]) 
+            throw createError.NotFound('No hemos encontrado la organización');
+
+        return res.status(200).json(organization);
+    } catch (err) {
+        next(err);
     }
-}
+};
 
 module.exports = {
     createOrganization,
     findOrganizationById,
-    updateOrganization
+    updateOrganization,
 };
