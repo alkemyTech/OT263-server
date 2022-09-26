@@ -1,61 +1,60 @@
-const { Activities } = require("../models");
-const { validateActivity } = require("../util/activity.joi");
-const schema = require("../util/activitie.joi");
+const { Activities } = require('../models');
+const createHttpError = require('http-errors');
 
 class ActivitiesController {
-    async getActivities(req, res) {
+    async getActivities(req, res, next) {
         try {
             const activities = await Activities.findAll();
+            if (!activities)
+                throw createHttpError(404, 'No hay ninguna actividad');
+
             return res.status(200).json(activities);
         } catch (err) {
-            return res.status(404).send({ message: err.message });
+            next(err);
         }
     }
 
-    createActivity = async (req, res) => {
+    createActivity = async (req, res, next) => {
+        const { name, content, image } = req.body;
         try {
-            const value = await schema.validateAsync(req.body);
-            return res.json(await Activities.create(value));
+            const newActivity = await Activities.create({
+                name,
+                content,
+                image,
+            });
+
+            return res.status(201).json(newActivity);
         } catch (err) {
-            return res.status(400).json({ message: err.message });
+            next(err);
         }
     };
 
-    updateActivities = async (req, res) => {
+    updateActivities = async (req, res, next) => {
         const { id } = req.params;
+        const updateActivity = req.body;
         try {
-            const { error, value } = validateActivity(req.body);
-
-            if (error) {
-                let errors = [];
-                error.details.forEach((element) => {
-                    return errors.push(element.message);
-                });
-                return res.status(400).json({ message: errors });
-            }
-
-            const [updateActivity] = await Activities.update(value, {
+            const [row] = await Activities.update(updateActivity, {
                 where: { id },
             });
-            if (!updateActivity)
-                return res.status(404).json("No Activity found");
+            if (!row)
+                throw createHttpError(404, 'No hemos encontrado la actividad');
 
             return res.status(200).json(value);
         } catch (err) {
-            return res.status(500).json({ message: err.message });
+            next(err);
         }
     };
 
-    async deleteActivity(req, res) {
+    async deleteActivity(req, res, next) {
         const { id } = req.params;
         try {
             const deleteActivity = await Activities.destroy({ where: { id } });
             if (!deleteActivity)
-                return res.status(404).json("No Activity found");
+                throw createHttpError(404, 'No hemos encontrado la actividad');
 
-            return res.status(200).json("Activity deleted");
+            return res.status(204).json();
         } catch (err) {
-            return res.status(500).json({ message: err.message });
+            next(err);
         }
     }
 }
