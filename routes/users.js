@@ -9,7 +9,7 @@ const {
     updateUserSchema,
     findUserSchema,
     loginUserSchema,
-} = require('../util/user.joi');
+} = require('../schemas/user.joi');
 
 const UserController = require('../controllers/user.controller');
 const controller = new UserController();

@@ -7,7 +7,7 @@ const {
     findNewsSchema,
     createNewsSchema,
     updateNewsSchema,
-} = require('../util/news.joi');
+} = require('../schemas/news.joi');
 
 const NewsController = require('../controllers/news.controller');
 const controller = new NewsController();

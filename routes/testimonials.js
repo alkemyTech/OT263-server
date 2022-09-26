@@ -6,7 +6,7 @@ const {
     findTestimonialSchema,
     updateTestimonialSchema,
     createTestimonialSchema,
-} = require('../util/testimonial.joi');
+} = require('../schemas/testimonial.joi');
 
 const TestimonialsController = require('../controllers/testimonials.controller');
 const controller = new TestimonialsController();

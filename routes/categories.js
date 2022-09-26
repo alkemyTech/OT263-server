@@ -13,7 +13,7 @@ const {
     updateCategorySchema,
     createCategorySchema,
     findCategorySchema,
-} = require("../util/category.joi");
+} = require("../schemas/category.joi");
 
 router.use(requireAuth, requireAdmin);
 

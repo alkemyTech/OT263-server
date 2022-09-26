@@ -7,7 +7,7 @@ const {
     findActivitySchema,
     createActivitySchema,
     updateActivitySchema,
-} = require('../util/activities.joi')
+} = require('../schemas/activities.joi')
 
 const {
     ActivitiesController,

@@ -5,7 +5,7 @@ const {
     postContacts,
 } = require('../controllers/contacts.controller');
 const { validationMiddleware } = require('../middlewares/validationMiddleware');
-const { contactSchema } = require('../util/contact.joi');
+const { contactSchema } = require('../schemas/contact.joi');
 
 router.get('/', getContacts);
 router.post('/', validationMiddleware(contactSchema, 'body'), postContacts);

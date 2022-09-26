@@ -13,7 +13,7 @@ const {
     createMemberSchema,
     updateMemberSchema,
     findMemberSchema,
-} = require('../util/member.joi');
+} = require('../schemas/member.joi');
 
 router.get('/', requireAuth, requireAdmin, getMembers);
 router.post(
