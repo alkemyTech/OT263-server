@@ -1,37 +1,37 @@
 const Joi = require('joi');
 
-const userData = Joi.object({
-    firstName: Joi.string().min(2).max(30),
-    lastName: Joi.string().min(2).max(30),
-    email: Joi.string().email(),
-    password: Joi.string().min(5),
+const id = Joi.number().integer().min(1).required();
+const firstName = Joi.string().min(2).max(30);
+const lastName = Joi.string().min(2).max(30);
+const email = Joi.string().email();
+const password = Joi.string().min(6).max(30);
+
+const findUserSchema = Joi.object({
+    id,
 });
 
 const createUserSchema = Joi.object({
-    firstname: userData.required(),
-    lastname: userData.required(),
-    email: userData.required(),
-    password: userData.required(),
-})   
-const findUserSchema = Joi.object({
-    id: Joi.number().integer().required(),
-})
+    firstName: firstName.required(),
+    lastName: lastName.required(),
+    email: email.required(),
+    password: password.required(),
+});
 
 const updateUserSchema = Joi.object({
-    ...userData,
-})
-
+    firstName,
+    lastName,
+    email,
+    password,
+});
 
 const loginUserSchema = Joi.object({
-    email: userData.required(),
-    password: userData.required(),
-})
+    email: email.required(),
+    password: password.required(),
+});
 
 module.exports = {
     createUserSchema,
     updateUserSchema,
     findUserSchema,
     loginUserSchema,
-}
-
-
+};

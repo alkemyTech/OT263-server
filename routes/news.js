@@ -1,15 +1,41 @@
-const express = require('express')
-const router = express.Router()
-const { requireAuth } = require('../middlewares/requireAuth')
-const { requireAdmin } = require('../middlewares/requireAdmin')
-const { updateEntry } = require('../controllers/entries')
-const { getNewsById, deleteNews, createNews, newsList } = require('../controllers/news.controller')
+const express = require('express');
+const router = express.Router();
+const { requireAuth } = require('../middlewares/requireAuth');
+const { requireAdmin } = require('../middlewares/requireAdmin');
+const { validationMiddleware } = require('../middlewares/validationMiddleware');
+const {
+    findNewsSchema,
+    createNewsSchema,
+    updateNewsSchema,
+} = require('../util/news.joi');
 
+const NewsController = require('../controllers/news.controller');
+const controller = new NewsController();
 
-router.get('/', newsList);
-router.put('/:id', requireAuth, requireAdmin, updateEntry)
-router.get('/:id', getNewsById)
-router.delete('/:id', requireAuth, requireAdmin, deleteNews)
-router.post('/', requireAuth, requireAdmin, createNews);
+router.get('/', controller.newsList);
+router.get('/:id', controller.getNewsById);
+router.post(
+    '/',
+    requireAuth,
+    requireAdmin,
+    validationMiddleware(createNewsSchema, 'body'),
+    controller.createNews
+);
+controller.createNews;
+router.put(
+    '/:id',
+    requireAuth,
+    requireAdmin,
+    validationMiddleware(findNewsSchema, 'params'),
+    validationMiddleware(updateNewsSchema, 'body'),
+    controller.updateNews
+);
+router.delete(
+    '/:id',
+    requireAuth,
+    requireAdmin,
+    validationMiddleware(findNewsSchema, 'params'),
+    controller.deleteNews
+);
 
-module.exports = router
+module.exports = router;
