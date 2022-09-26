@@ -1,21 +1,42 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
-const { body } = require('express-validator');
-const { updateMember, deleteMember, getMembers, createMember } = require('../controllers/members.controller')
-const { requireAuth } = require("../middlewares/requireAuth");
-const { requireAdmin } = require("../middlewares/requireAdmin");
+const {
+    updateMember,
+    deleteMember,
+    getMembers,
+    createMember,
+} = require('../controllers/members.controller');
+const { requireAuth } = require('../middlewares/requireAuth');
+const { requireAdmin } = require('../middlewares/requireAdmin');
+const { validationMiddleware } = require('../middlewares/validationMiddleware');
+const {
+    createMemberSchema,
+    updateMemberSchema,
+    findMemberSchema,
+} = require('../util/member.joi');
 
-
-router.delete('/:id', requireAuth, requireAdmin, deleteMember)
-
-router.put('/:id',
-  body('name').notEmpty().isLength({ min: 3 }),
-  requireAuth,
-  requireAdmin,
-  updateMember
-)
-
-router.get('/', requireAuth, requireAdmin, getMembers)
-router.post('/', requireAuth, requireAdmin, createMember)
+router.get('/', requireAuth, requireAdmin, getMembers);
+router.post(
+    '/',
+    validationMiddleware(createMemberSchema, 'body'),
+    requireAuth,
+    requireAdmin,
+    createMember
+);
+router.put(
+    '/:id',
+    requireAuth,
+    requireAdmin,
+    validationMiddleware(findMemberSchema, 'params'),
+    validationMiddleware(updateMemberSchema, 'body'),
+    updateMember
+);
+router.delete(
+    '/:id',
+    requireAuth,
+    requireAdmin,
+    validationMiddleware(findMemberSchema, 'params'),
+    deleteMember
+);
 
 module.exports = router;
