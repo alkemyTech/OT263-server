@@ -1,19 +1,44 @@
-const { Router } = require("express");
+const { Router } = require('express');
+const { requireAdmin } = require('../middlewares/requireAdmin');
+const { requireAuth } = require('../middlewares/requireAuth');
+const { validationMiddleware } = require('../middlewares/validationMiddleware');
 const {
-    getTestimonials,
-    findTestimonial,
-    updateTestimonial,
-    createTestimonial,
-    deleteTestimonial,
-} = require("../controllers/testimonials.controller");
-const { requireAdmin } = require("../middlewares/requireAdmin");
-const { requireAuth } = require("../middlewares/requireAuth");
+    findTestimonialSchema,
+    updateTestimonialSchema,
+    createTestimonialSchema,
+} = require('../util/testimonial.joi');
+
+const TestimonialsController = require('../controllers/testimonials.controller');
+const controller = new TestimonialsController();
+
 const router = Router();
 
-router.get("/", getTestimonials);
-router.get("/:id", findTestimonial);
-router.put("/:id", requireAuth, requireAdmin, updateTestimonial);
-router.post("/", requireAuth, createTestimonial);
-router.delete("/:id", requireAuth, requireAdmin, deleteTestimonial);
+router.get('/', controller.getTestimonials);
+router.get(
+    '/:id',
+    validationMiddleware(findTestimonialSchema, 'params'),
+    controller.findTestimonial
+);
+router.put(
+    '/:id',
+    requireAuth,
+    requireAdmin,
+    validationMiddleware(findTestimonialSchema, 'params'),
+    validationMiddleware(updateTestimonialSchema, 'body'),
+    controller.updateTestimonial
+);
+router.post(
+    '/',
+    requireAuth,
+    validationMiddleware(createTestimonialSchema, 'body'),
+    controller.createTestimonial
+);
+router.delete(
+    '/:id',
+    requireAuth,
+    requireAdmin,
+    validationMiddleware(findTestimonialSchema, 'params'),
+    controller.deleteTestimonial
+);
 
 module.exports = router;

@@ -11,14 +11,14 @@ const createTokenLogin = async (req) => {
     if (!user) {
         throw createHttpError(
             400,
-            'Invalid credentials. Please check your email and password.'
+            'Credenciales invalidas. Por favor revise su email y su password.'
         );
     } else {
         const token = bcrypt.compare(password, user.password).then((match) => {
             if (!match) {
                 throw createHttpError(
                     400,
-                    'Invalid credentials. Please check your email and password.'
+                    'Credenciales invalidas. Por favor revise su email y su password.'
                 );
             }
             const payload = { sub: user.id, roleId: user.roleId };

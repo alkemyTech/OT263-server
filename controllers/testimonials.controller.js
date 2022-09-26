@@ -1,61 +1,72 @@
-const { testimonials } =require ('../models');
-const { createTestimonialSchema } = require('../util/testimonial.joi');
+const { testimonials } = require('../models');
+const createHttpError = require('http-errors');
 
-const getTestimonials=async (req,res)=>{
-    try{
-        const allTestimonials=await testimonials.findAll();
-        return res.status(200).json(allTestimonials);
-    }catch(err){
-        return res.status(404).send({message:err.message})
-    }
-}
+class TestimonialsController {
+    constructor() {}
 
-const findTestimonial=async (req,res)=>{
-    try{
-        const {id}=req.params;
-        const testimonial=await testimonials.findByPk(id);
-        if(!testimonial) return res.status(404).json({message:"Testimonial not found"});
-        return res.status(200).json(testimonial);
-    }catch(err){
-        return res.status(404).send({message:err.message})
-    }
-}
+    getTestimonials = async (req, res, next) => {
+        try {
+            const allTestimonials = await testimonials.findAll();
+            return res.status(200).json(allTestimonials);
+        } catch (err) {
+            next(err);
+        }
+    };
 
-const updateTestimonial=async (req, res)=>{    
-    try{
-        const testimonial= await testimonials.update(req.body, {where:{id:req.params.id}})                
-        if(testimonial[0])return res.status(200).json(req.body)
-        throw new Error ("Testimonial not found", 404)
-    }catch(err){
-        return res.status(404).json({message:err.message})
-    }
-}
+    findTestimonial = async (req, res, next) => {
+        const { id } = req.params;
+        try {
+            const testimonial = await testimonials.findByPk(id);
+            if (!testimonial)
+                throw createHttpError(404, 'Testimonio no encontrado');
 
-async function createTestimonial(req, res) {
-    try {    
+            return res.status(200).json(testimonial);
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    updateTestimonial = async (req, res, next) => {
+        try {
+            const [row] = await testimonials.update(req.body, {
+                where: { id: req.params.id },
+            });
+            if (!row) throw createHttpError(404, 'Testimonio no encontrado');
+
+            return res.status(200).json(req.body);
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    createTestimonial = async (req, res, next) => {
         const { name, content, image } = req.body;
-        await createTestimonialSchema.validateAsync({ name, content});
-        const newTestimonial = await testimonials.create({ name, content, image });
-        return res.status(201).json(newTestimonial);
-    } catch (err) {
-        return res.status(400).send({ message: err.message })
-    }
+        try {
+            const newTestimonial = await testimonials.create({
+                name,
+                content,
+                image,
+            });
 
-}
-const deleteTestimonial=async (req,res)=>{
-    try{
-        const result= await testimonials.destroy({where:{id:req.params.id}})
-        if(!result)throw new Error("Elemento no encontrado", 404)
-        return res.status(200).json({message:"Elemento eliminado con exito"})
-    }catch(err){
-        return res.status(404).json({message:err.message})
-    }
+            return res.status(201).json(newTestimonial);
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    deleteTestimonial = async (req, res, next) => {
+        const { id } = req.params;
+        try {
+            const row = await testimonials.destroy({
+                where: { id: id },
+            });
+            if (!row) throw createHttpError(404, 'Testimonio no encontrado');
+
+            return res.status(204).send();
+        } catch (err) {
+            next(err);
+        }
+    };
 }
 
-module.exports = {
-    updateTestimonial,
-    createTestimonial,
-    deleteTestimonial,
-    getTestimonials,
-    findTestimonial
-}
+module.exports = TestimonialsController;
