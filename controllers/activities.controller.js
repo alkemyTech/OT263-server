@@ -1,40 +1,62 @@
-const { Activities } = require("../models");
-const { validateActivity } = require("../util/activity.joi");
-const schema = require('../util/activitie.joi')
+const { Activities } = require('../models');
+const createHttpError = require('http-errors');
 
-const updateActivities = async (req, res) => {
-    const {id} = req.params;
-	try {
-		const { error, value } = validateActivity(req.body)
+class ActivitiesController {
+    async getActivities(req, res, next) {
+        try {
+            const activities = await Activities.findAll();
+            if (!activities)
+                throw createHttpError(404, 'No hay ninguna actividad');
 
-		if (error) {
-			let errors= [];
-			error.details.forEach(element => {
-				return errors.push(element.message)
-			});
-			return res.status(400).json({message: errors})
-		}
+            return res.status(200).json(activities);
+        } catch (err) {
+            next(err);
+        }
+    }
 
-		const [updateActivity] = await Activities.update(value, { where: { id } });
-		if (!updateActivity) return res.status(404).json('No Activity found')
+    createActivity = async (req, res, next) => {
+        const { name, content, image } = req.body;
+        try {
+            const newActivity = await Activities.create({
+                name,
+                content,
+                image,
+            });
 
-		return res.status(200).json(value);
-	} catch (err) {
-		return res.status(500).json({message: err.message})
-	}
-}
+            return res.status(201).json(newActivity);
+        } catch (err) {
+            next(err);
+        }
+    };
 
-const createActivity=async (req, res)=>{
-    
-    try{
-        const value=await schema.validateAsync(req.body)
-        return res.json(await Activities.create(value))
-    }catch(err){
-        return res.status(400).json({message:err.message})
+    updateActivities = async (req, res, next) => {
+        const { id } = req.params;
+        const updateActivity = req.body;
+        try {
+            const [row] = await Activities.update(updateActivity, {
+                where: { id },
+            });
+            if (!row)
+                throw createHttpError(404, 'No hemos encontrado la actividad');
+
+            return res.status(200).json(value);
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    async deleteActivity(req, res, next) {
+        const { id } = req.params;
+        try {
+            const deleteActivity = await Activities.destroy({ where: { id } });
+            if (!deleteActivity)
+                throw createHttpError(404, 'No hemos encontrado la actividad');
+
+            return res.status(204).json();
+        } catch (err) {
+            next(err);
+        }
     }
 }
 
-module.exports = {
-    updateActivities,
-    createActivity
-}
+module.exports = { ActivitiesController };

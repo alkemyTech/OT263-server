@@ -1,36 +1,52 @@
-var express = require('express')
-var router = express.Router()
-const { body } = require('express-validator')
-const { loginUser, createUser } = require('../controllers/user.auth.controller')
-const { requireAuth } = require('../middlewares/requireAuth')
+var express = require('express');
+var router = express.Router();
+const {
+    loginUser,
+    createUser,
+    getMe,
+} = require('../controllers/auth.controller');
+const { requireAuth } = require('../middlewares/requireAuth');
+const { requireAdmin } = require('../middlewares/requireAdmin');
+const { validationMiddleware } = require('../middlewares/validationMiddleware');
+const {
+    createUserSchema,
+    updateUserSchema,
+    findUserSchema,
+    loginUserSchema,
+} = require('../schemas/user.joi');
 
-const UserController = require('../controllers/user.controller')
-const { requireAdmin } = require('../middlewares/requireAdmin')
+const UserController = require('../controllers/user.controller');
+const controller = new UserController();
 
-const controller = new UserController()
+router.use(express.json());
 
-router.use(express.json())
+//To user controller
+router.get('/', requireAuth, requireAdmin, controller.getUsers);
+router.put(
+    '/:id',
+    requireAuth,
+    validationMiddleware(findUserSchema, 'params'),
+    validationMiddleware(updateUserSchema, 'body'),
+    controller.updateUser
+);
+router.delete(
+    '/:id',
+    requireAuth,
+    validationMiddleware(findUserSchema, 'params'),
+    controller.deleteUser
+);
 
-router.get('/', requireAuth, requireAdmin, controller.getUsers)
-
+//To auth controller
 router.post(
-        '/auth/login',
-        body('email').notEmpty().isEmail(),
-        body('password').isLength({ min: 5 }),
-        loginUser
-)
+    '/auth/register',
+    validationMiddleware(createUserSchema, 'body'),
+    createUser
+);
+router.post(
+    '/auth/login',
+    validationMiddleware(loginUserSchema, 'body'),
+    loginUser
+);
+router.get('/auth/me', requireAuth, getMe);
 
-router.get('/auth/me', requireAuth, async function (req, res, next) {
-        try {
-                const userId = req.user.sub
-                const user = await controller.getUserById(userId)
-          res.send(user)
-        } catch (err) {
-                next(err)
-        }
-})
-
-router.post('/auth/register', createUser)
-
-router.delete('/:id', requireAuth, controller.deleteUser)
-module.exports = router
+module.exports = router;
