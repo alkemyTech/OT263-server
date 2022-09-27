@@ -3,11 +3,7 @@ const createError = require('http-errors')
 
 const newsList = async (req, res) => {
     try {
-        const list = await Entries.findAll({
-            where:{
-                type: 'news'
-            }            
-        })
+        const list = await Entries.findAll({})
         if (!list) return res.status(404).json('No news found')
         
         return res.status(200).json(list)
