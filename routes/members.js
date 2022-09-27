@@ -15,7 +15,7 @@ router.put('/:id',
   updateMember
 )
 
-router.get('/', requireAuth, requireAdmin, getMembers)
+router.get('/', getMembers)
 router.post('/', requireAuth, requireAdmin, createMember)
 
 module.exports = router;
