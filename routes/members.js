@@ -39,20 +39,4 @@ router.delete(
     deleteMember
 );
 
-<<<<<<< HEAD
-router.delete('/:id', requireAuth, requireAdmin, deleteMember)
-
-router.put('/:id',
-  body('name').notEmpty().isLength({ min: 3 }),
-  requireAuth,
-  requireAdmin,
-  updateMember
-)
-
-router.get('/', getMembers)
-router.post('/', requireAuth, requireAdmin, createMember)
-
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> 3fffb79189265f898ef4461765600b035944ff67
