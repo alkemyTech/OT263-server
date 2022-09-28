@@ -55,7 +55,7 @@ async function getMe(req, res, next) {
     try {
         const user = await User.findByPk(id);
         if (!user) {
-            throw createError.NotFound('Usuario no encontrado');
+            throw createHttpError.NotFound('Usuario no encontrado');
         }
         
         return res.status(200).json(user);

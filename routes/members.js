@@ -15,7 +15,7 @@ const {
     findMemberSchema,
 } = require('../schemas/member.joi');
 
-router.get('/', requireAuth, requireAdmin, getMembers);
+router.get('/', getMembers);
 router.post(
     '/',
     validationMiddleware(createMemberSchema, 'body'),
