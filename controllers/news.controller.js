@@ -45,12 +45,12 @@ class NewsController {
     };
 
     createNews = async (req, res, next) => {
-        const { name, content, image, categoryId } = req.body;
+        const { name, content, image } = req.body;
         const DTO = {
             name,
             content,
             image,
-            categoryId,
+            categoryId: 1,
             type: 'news',
         };
         try {
