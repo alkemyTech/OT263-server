@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const schema = Joi.object({
+const contactSchema = Joi.object({
   name: Joi.string()
     .alphanum()
     .min(3)
@@ -13,11 +13,15 @@ const schema = Joi.object({
     .max(30),
 
   email: Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
+    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+    .required(),
 
   message: Joi.string()
     .min(3)
-    .max(30),
+    .max(30)
+    .required(),
 })
 
-module.exports = schema
+module.exports = {
+  contactSchema,
+}

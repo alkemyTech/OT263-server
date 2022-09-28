@@ -1,69 +1,57 @@
-const { Member } = require("../models")
-const schema = require("../util/member.joi");
-const createError = require('http-errors')
+const { Member } = require('../models');
 
-const deleteMember = async (req, res) => {
-  const {id} = req.params
+const getMembers = async (req, res, next) => {
+    try {
+        const member = await Member.findAll();
+        if (!member) throw createError.NotFound('No hay miembros');
 
-  try {
-    const delMember = await Member.destroy({ where: {id} })
-    if (!delMember) return res.status(404).json(createError.NotFound())
+        return res.status(200).json(member);
+    } catch (error) {
+        next(error);
+    }
+};
 
-    return res.status(200).json("DELETED SUCCESS")
-  } catch (error) {
-		if (error.fields) return res.status(400).json(createError.BadRequest(error.original.sqlMessage))
-		return res.status(500).json(createError.InternalServerError())
-	}
-}
+const createMember = async (req, res, next) => {
+    const { name, image } = req.body;
+    try {
+        const member = await Member.create({
+            name,
+            image,
+        });
+        return res.status(201).json(member);
+    } catch (err) {
+        next(err);
+    }
+};
 
-const updateMember = async (req, res) => {
-	const { id } = req.params
-	const member = req.body
-  
-	try {
-		await schema.validateAsync(member)
+const updateMember = async (req, res, next) => {
+    const { id } = req.params;
+    const member = req.body;
+    try {
+        const [isUpdated] = await Member.update(member, { where: { id } });
+        if (!isUpdated) throw createError.NotFound('El miembro no existe');
 
-		const [isUpdated] = await Member.update(member, { where: { id } })
-    
-		if (!isUpdated) return res.status(404).json(createError.NotFound())
-    
-		return res.status(200).json(member)
-	} catch (error) {
-		return res.status(400).json(createError.BadRequest())
-	}
-}
+        return res.status(200).json(member);
+    } catch (error) {
+        next(error);
+    }
+};
 
-const getMembers = async (req, res) => {
-  try {
-    const member = await Member.findAll()
-    if (!member) return res.status(404).json(createError.NotFound())
+const deleteMember = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+        const delMember = await Member.destroy({ where: { id } });
+        if (!delMember) throw createError.NotFound('El miembro no existe');
 
-    return res.status(200).json(member)
-  } catch (error) {
-		if (error.fields) return res.status(400).json(createError.BadRequest(error.original.sqlMessage))
-		return res.status(500).json(createError.InternalServerError())
-	}
-}
-
-const createMember = async (req, res) => {
-  const values = req.body
-  try {
-      const { error } = await schema.validateAsync(values)
-      if(error){
-          return res.status(400).json({message: error.details[0].message})
-      }
-      const member = await Member.create({
-          ...values
-      })
-      return res.status(200).json(member);
-  } catch (err) {
-      return res.status(500).json({message: err.message});
-  }
-}
+        return res.status(204).send();
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
-  updateMember,
-  getMembers,
-  deleteMember,
-  createMember
-}
+    updateMember,
+    getMembers,
+    deleteMember,
+    createMember,
+};

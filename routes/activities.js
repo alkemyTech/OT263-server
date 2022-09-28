@@ -1,11 +1,37 @@
 const express = require('express');
 const router = express.Router();
-const { requireAuth } = require('../middlewares/requireAuth')
-const { requireAdmin } = require('../middlewares/requireAdmin')
-const { updateActivities } = require('../controllers/activities.controller');
-const { createActivity } = require('../controllers/activities.controller')
+const { requireAuth } = require('../middlewares/requireAuth');
+const { requireAdmin } = require('../middlewares/requireAdmin');
+const { validationMiddleware } = require('../middlewares/validationMiddleware');
+const {
+    findActivitySchema,
+    createActivitySchema,
+    updateActivitySchema,
+} = require('../schemas/activities.joi')
 
-router.put ('/:id', requireAuth, requireAdmin, updateActivities);
-router.post('', requireAuth, requireAdmin, createActivity)
+const {
+    ActivitiesController,
+} = require('../controllers/activities.controller');
+const controller = new ActivitiesController();
 
-module.exports = router
+router.use(requireAuth, requireAdmin);
+
+router.get('/', controller.getActivities);
+router.post(
+    '/',
+    validationMiddleware(createActivitySchema, 'body'),
+    controller.createActivity
+);
+router.put(
+    '/:id',
+    validationMiddleware(findActivitySchema, 'params'),
+    validationMiddleware(updateActivitySchema, 'body'),
+    controller.updateActivities
+);
+router.delete(
+    '/:id',
+    validationMiddleware(findActivitySchema, 'params'),
+    controller.deleteActivity
+);
+
+module.exports = router;
